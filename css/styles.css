@@ -506,7 +506,7 @@ a:hover { color: var(--orange); }
 }
 
 /* ---------- Watch ---------- */
-.watch { background: var(--bg-2); }
+.watch { background: var(--bg); }
 .split {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
@@ -714,7 +714,7 @@ a:hover { color: var(--orange); }
 .subscribe-copy p { margin: 0 0 1rem; color: var(--text-dim); }
 .fine-print { font-size: 0.8rem !important; color: var(--text-faint) !important; }
 
-/* ---------- Advertise / Creators / Investors ---------- */
+/* ---------- Shared layout helpers ---------- */
 .grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -817,6 +817,7 @@ label > span { display: block; margin-bottom: 0.35rem; }
 input[type="text"],
 input[type="email"],
 input[type="url"],
+input[type="date"],
 select,
 textarea {
   width: 100%;
@@ -1026,6 +1027,8 @@ textarea { min-height: 8rem; resize: vertical; }
   .grid-2,
   .featured,
   .cards-3,
+  .cards-services,
+  .steps,
   .stat-row,
   .subscribe-block,
   .about-grid,
@@ -1079,12 +1082,6 @@ textarea { min-height: 8rem; resize: vertical; }
   border: 0;
 }
 
-/* Tighten advertise cards-3 when stacked in one column already handled;
-   restore 3-col on large screens even inside left column? keep stacked for readability. */
-@media (min-width: 981px) {
-  #advertise .cards-3 { grid-template-columns: 1fr; }
-}
-
 @media print {
   .preloader { display: none !important; }
   .reveal { opacity: 1 !important; transform: none !important; }
@@ -1096,4 +1093,60 @@ textarea { min-height: 8rem; resize: vertical; }
       linear-gradient(180deg, rgba(10, 7, 8, 0.48) 0%, rgba(10, 7, 8, 0.28) 30%, rgba(10, 7, 8, 0.88) 100%),
       linear-gradient(90deg, rgba(10, 7, 8, 0.55) 0%, rgba(10, 7, 8, 0.2) 100%);
   }
+}
+
+
+/* ---------- Agency sections ---------- */
+.cards-services {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+@media (min-width: 981px) {
+  .cards-services {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  .cards-services .icon-card:nth-child(-n+3) { grid-column: span 2; }
+  .cards-services .icon-card:nth-child(4) { grid-column: 2 / span 2; }
+  .cards-services .icon-card:nth-child(5) { grid-column: 4 / span 2; }
+}
+
+.how { background: var(--bg-2); }
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+.step {
+  background: var(--bg-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 1.4rem 1.3rem 1.5rem;
+}
+.step-num {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--yellow);
+  font-size: 0.95rem;
+  margin-bottom: 0.85rem;
+}
+.step h3 {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  margin: 0 0 0.45rem;
+  letter-spacing: -0.02em;
+}
+.step p { margin: 0; color: var(--text-dim); font-size: 0.98rem; }
+
+.work-grid { margin-top: 0.4rem; }
+.start { background: var(--bg-2); }
+
+input[type="date"] {
+  min-height: 2.9rem;
+  color-scheme: dark;
 }
