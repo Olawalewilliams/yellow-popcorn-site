@@ -4,7 +4,16 @@
 (function () {
   "use strict";
 
+  document.documentElement.classList.remove("no-js");
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ----- Respect reduced motion: hold looping videos on their poster ----- */
+  if (reduceMotion) {
+    document.querySelectorAll("video[loop]").forEach(function (v) {
+      v.removeAttribute("autoplay");
+      v.pause();
+    });
+  }
 
   /* ----- Preloader ----- */
   var preloader = document.getElementById("preloader");
@@ -24,6 +33,9 @@
       }
     }, 800);
   }
+
+  var skip = document.getElementById("preloader-skip");
+  if (skip) skip.addEventListener("click", hidePreloader);
 
   if (reduceMotion) {
     hidePreloader();
@@ -104,11 +116,35 @@
       var target = document.querySelector(id);
       if (!target) return;
       e.preventDefault();
-      var top = target.getBoundingClientRect().top + window.scrollY - 64;
+      var offset = header ? header.offsetHeight - 1 : 64;
+      var top = id === "#home" ? 0 : target.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({ top: top, behavior: reduceMotion ? "auto" : "smooth" });
       if (history.replaceState) history.replaceState(null, "", id);
     });
   });
+
+  /* ----- Highlight the current section in the nav ----- */
+  var navLinks = nav ? Array.prototype.slice.call(nav.querySelectorAll(".nav-links a")) : [];
+  var spySections = navLinks
+    .map(function (a) { return document.querySelector(a.getAttribute("href")); })
+    .filter(Boolean);
+  function spy() {
+    var line = window.scrollY + window.innerHeight * 0.35;
+    var current = null;
+    spySections.forEach(function (sec) {
+      if (sec.offsetTop <= line) current = sec.id;
+    });
+    navLinks.forEach(function (a) {
+      var on = a.getAttribute("href") === "#" + current;
+      a.classList.toggle("is-active", on);
+      if (on) a.setAttribute("aria-current", "true");
+      else a.removeAttribute("aria-current");
+    });
+  }
+  if (spySections.length) {
+    spy();
+    window.addEventListener("scroll", spy, { passive: true });
+  }
 
   /* ----- Scroll reveals ----- */
   var reveals = document.querySelectorAll(".reveal");
